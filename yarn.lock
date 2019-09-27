@@ -6365,6 +6365,24 @@ potato-ui@^0.1.0:
     core-js "^2.6.5"
     vue "^2.6.10"
 
+potato-ui@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/potato-ui/-/potato-ui-0.1.1.tgz#67f6c54570d21673453605ffa1f17656fee8b4d7"
+  integrity sha512-bwlmnvhrq8Ch4Y90jyCm4DsOkThpxncQcPcghzNB18CIaZxM5DpG/XLnmkoX2Ch9k0a/kkvi0EvB5WbJWrA4VA==
+  dependencies:
+    core-js "^2.6.5"
+    potato-ui "^0.1.0"
+    vue "^2.6.10"
+
+potato-ui@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/potato-ui/-/potato-ui-0.1.2.tgz#751dfd7980a154200455af67b9cc96f8487ee0d5"
+  integrity sha512-J2DNC0dM/FgjxMUbhHEofxJiOjXt/Azkl78AtYf9cSvT32jqHZ0+e3ha3gZOPI8lmL7j/tzEvQYgHWzBmBwsFA==
+  dependencies:
+    core-js "^2.6.5"
+    potato-ui "^0.1.1"
+    vue "^2.6.10"
+
 prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npm.taobao.org/prelude-ls/download/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"

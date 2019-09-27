@@ -3,8 +3,8 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
-import PotatoUi from 'potato-ui/'
-Vue.use(PotatoUi)
+import CardInput from "../packages/index";
+Vue.use(CardInput)
 
 new Vue({
   render: h => h(App),
