@@ -1,7 +1,7 @@
 {
   "name": "potato-ui",
   "author": "652139627@qq.com",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "main": "lib/potato-ui.umd.min.js",
   "license": "MIT",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
+    "potato-ui": "^0.1.0",
     "vue": "^2.6.10"
   },
   "devDependencies": {
