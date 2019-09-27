@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <card-input v-model="card" placeholder="证件号码"/>
   </div>
 </template>
 
@@ -8,12 +7,12 @@
 
   export default {
     name: 'app',
-    components: {
-    },
+    components: {},
     data () {
       return {
-        card: ''
       }
+    },
+    methods:{
     }
   }
 </script>

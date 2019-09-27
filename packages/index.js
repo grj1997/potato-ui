@@ -1,7 +1,9 @@
 import CardInput from "./card-input/src/CardInput";
+import Calendar from "./calendar/src/Calendar";
 // 以数组的结构保存组件
 const components = [
-  CardInput
+  CardInput,
+  Calendar
 ]
 
 // 定义install方法
