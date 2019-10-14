@@ -1,13 +1,12 @@
 <template>
-  <div class="card-input">
-    <input v-model="cardNo" ref="ipt" @blur="setCard(cardNo)" @keyup="updateCard(cardNo)" :maxlength="maxlength" :placeholder="placeholder" />
+  <div>
+    <input v-model="inputText" ref="input" @keyup="backspaceDown($event)" @blur="updateText(inputText)" maxlength="21" :placeholder="placeholder">
   </div>
 </template>
 
 <script>
   export default {
-    name: "pCardInput",
-
+    name: 'CardInput',
     props: {
       value: {
         type: String,
@@ -15,108 +14,151 @@
       },
       placeholder: {
         type: String,
-        default: '请输入'
-      },
-      maxlength: {
-        type: Number,
-        default: 21
+        default: '填写乘客证件号码'
       }
     },
-
+    data () {
+      return {
+        // 输入框内容
+        inputText: this.value,
+        // 光标位置
+        caretPos: 0,
+        // 是否格式化了数据，用于改变光标位置时的判断
+        isFormatted: false,
+        // 数据长度是否增加
+        isAdd: false,
+        // 是否是编辑了数据
+        isEdited: false
+      }
+    },
     watch: {
       value (newVal) {
-        this.cardNo = newVal;
-      }
-    },
-
-    components: {},
-
-    data() {
-      return {
-        cardNo: this.value
-      }
-    },
-
-    mounted() {
-    },
-
-    methods: {
-      // 追加空格
-      updateCard (card) {
-        // 获取当前光标的位置
-        let caret = this.$refs.ipt.selectionStart;
-        // 根据规则记录光标位置
-        if (caret === 0 && card.length <= 2) {
-          this.cardLen = card.length
-          this.cardNo = card = card.replace(/\s*/g, '')
-        }
-        if ((caret === 6 || caret === 11 || caret === 16) && card[caret - 1] !== '' && card[caret] !== undefined) {
-          // 如果删除位置是空格
-          if (card[caret] !== ' ') {
-            card = card.replace(/\s*/g, '')
-            let frontSex = card.substring(0, 6) + ' '
-            let rear = card.substring(6).replace(/\s/g, '').replace(/[^\d]/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
-            this.cardNo = frontSex + rear
-          }
-          this.$refs.ipt.selectionStart = caret
-          setTimeout(() => {
-            this.$refs.ipt.selectionEnd = caret
-          }, 0)
-          return;
-        }
-        // 防止快速输出 正则表达式没生效 长度超出
-        if (card.length > 21) {
-          this.cardNo = card.substring(0, 21)
-          return;
-        }
-        // 如果输入的长度大于初始值 则记录
-        if (!card.length) {
-          this.cardLen = 0
-        }
-        // 如果输入长度大于记录的长度
-        if (card.length > this.cardLen) {
-          this.cardLen = card.length
+        this.inputText = newVal;
+      },
+      inputText (value, oldValue) {
+        this.inputText = this.dataFormart(value)
+        let valNoSpace = value.replace(/ /g, '')
+        let oldValueNoSpace = oldValue.replace(/ /g, '')
+        if (valNoSpace.length > oldValueNoSpace.length) {
+          // 数据增加，并且认为没有格式化数据
+          this.isFormatted = false
+          this.isAdd = true
+        } else if (valNoSpace.length < oldValueNoSpace.length) {
+          // 数据减少，没有格式化数据
+          this.isFormatted = false
+          this.isAdd = false
         } else {
-          // 如果差值大于0
-          let difference = this.cardLen - card.length
-          if (difference > 0) {
-            this.$refs.ipt.selectionStart = caret
-            setTimeout(() => {
-              this.$refs.ipt.selectionEnd = caret
-            }, 0)
+          // 如果数据没变化就认为数据被格式化
+          this.isFormatted = true
+          this.caretPos = this.getCaretPosition(this.$refs.input)
+          // 非编辑模式下一旦被格式化光标会往前移动一位，下面的代码用于修复这个小Bug
+          if (this.isAdd && !this.isEdited) {
+            this.caretPos++
           }
         }
-        // 如果长度大于6
-        if (card.length > 6) {
-          card = card.replace(/\s*/g, '')
-          let frontSex = card.substring(0, 6) + ' '
-          let rear = card.substring(6).replace(/\s/g, '').replace(/[^\d]/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
-          this.cardNo = frontSex + rear
+        this.$emit('input', this.inputText)
+      }
+    },
+    mounted () {
+      // 拥有数据进行格式化处理
+      if (this.inputText) {
+        this.updateText(this.inputText)
+        setTimeout(() => {
+          this.$refs.input.blur();
+        }, 0)
+      }
+    },
+    methods: {
+      updateText (inputText) {
+        if (!inputText) {
+          return;
         }
+        let frontSex = inputText.substring(0, 6) + ' '
+        let rear = inputText.substring(6).replace(/\s/g, '').replace(/[^\w]/g, '').replace(/(\d{4})(?=\w)/g, '$1 ')
+        this.inputText = frontSex + rear
       },
 
-      // 失去焦点再设置一次
-      setCard (card) {
-        // 防止正则表达式没生效 长度超出
-        if (card.length > 21) {
-          this.cardNo = card.substring(0, 21)
-          return;
+      // 更正
+      dataFormart (value) {
+        let newValue = value.replace(/ /g, '')
+        if (newValue.length <= 6) {
+          return newValue
+        } else if (newValue.length > 6 && newValue.length <= 10) {
+          let str1 = newValue.substr(0, 6)
+          let str2 = newValue.substr(6)
+          return str1 + ' ' + str2
+        } else if (newValue.length > 10 && newValue.length <= 14) {
+          let str1 = newValue.substr(0, 6)
+          let str2 = newValue.substr(6, 4)
+          let str3 = newValue.substr(10)
+          return str1 + ' ' + str2 + ' ' + str3
+        } else if (newValue.length > 14) {
+          let str1 = newValue.substr(0, 6)
+          let str2 = newValue.substr(6, 4)
+          let str3 = newValue.substr(10, 4)
+          let str4 = newValue.substr(14)
+          return str1 + ' ' + str2 + ' ' + str3 + ' ' + str4
         }
-        let frontSex = card.substring(0, 6) + ' '
-        let rear = card.substring(6).replace(/\s/g, '').replace(/[^\d]/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
-        this.cardNo = frontSex + rear
+        return value
+      },
+
+      // 光标位置
+      getCaretPosition (element) {
+        let cursorPos = 0;
+        if (document.selection) { // IE
+          let selectRange = document.selection.createRange();
+          selectRange.moveStart('character', -element.value.length);
+          cursorPos = selectRange.text.length;
+        } else if (element.selectionStart || element.selectionStart === '0') {
+          cursorPos = element.selectionStart;
+        }
+        return cursorPos;
+      },
+
+      // 设定光标位置
+      setCaretPosition (textDom, pos) {
+        if (textDom.setSelectionRange) {
+          // IE Support
+          textDom.focus();
+          textDom.setSelectionRange(pos, pos);
+        } else if (textDom.createTextRange) {
+          // Firefox support
+          let range = textDom.createTextRange();
+          range.collapse(true);
+          range.moveEnd('character', pos);
+          range.moveStart('character', pos);
+          range.select();
+        }
+      },
+      backspaceDown (e) {
+        // 获取光标所在位置
+        let nowCaretPos = this.getCaretPosition(e.target)
+        // 获取光标前的文本，用于判断是否编辑数据
+        let frontValue = this.inputText.substr(0, nowCaretPos)
+        // 当光标前文本长度与输入框内容长度相等时，认为非编辑模式
+        if (frontValue.length === this.inputText.length) {
+          this.isEdited = false
+        } else {
+          this.isEdited = true
+        }
+        // 如果编辑模式下光标前一位是空格，就删掉它
+        if ((this.isEdited) && (frontValue.charAt(frontValue.length - 1) === ' ')) {
+          let startText = frontValue.substr(0, frontValue.length - 1)
+          let endText = this.inputText.substr(frontValue.length)
+          this.inputText = startText + endText
+          this.$emit('input', this.inputText)
+        }
+      }
+    },
+    updated () {
+      // 如果格式化了数据就重新设定光标位置
+      if (this.isFormatted) {
+        this.setCaretPosition(this.$refs.input, this.caretPos)
       }
     }
   }
 </script>
 
-<style scoped lang="scss">
-  .card-input {
-    width: 100%;
-    height: 100%;
-    input{
-      width: 100%;
-      height: 100%;
-    }
-  }
+<style scoped>
+
 </style>
