@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: 'CardInput',
+    name: 'pCardInput',
     props: {
       value: {
         type: String,
