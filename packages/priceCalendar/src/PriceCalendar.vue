@@ -239,7 +239,6 @@
               isToday: obj.isToday,
               dateC: obj.dateC
             };
-            console.log(obj)
             this.$emit('isToday', this.dataFormat(new Date(myDate.getFullYear() + '/' + (myDate.getMonth() + 1) + '/' + index)))
           } else {
             if (new Date().getTime() > new Date(myDate.getFullYear() + '/' + (myDate.getMonth() + 1) + '/' + index).getTime()) {
