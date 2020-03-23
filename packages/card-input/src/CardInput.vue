@@ -1,12 +1,18 @@
+
 <template>
-  <div>
-    <input v-model="inputText" ref="input" @keyup="backspaceDown($event)" @blur="updateText(inputText)" maxlength="21" :placeholder="placeholder">
+  <div class="card-number">
+    <input v-model="inputText" ref="input"
+           class="placeholder"
+           @keyup="backspaceDown($event)"
+           @blur="updateText(inputText)"
+           :maxlength="type === 1 ? cardNumberLen : bankNumberLen "
+           :placeholder="placeholder">
   </div>
 </template>
 
 <script>
   export default {
-    name: 'pCardInput',
+    name: 'cardNumber',
     props: {
       value: {
         type: String,
@@ -14,7 +20,11 @@
       },
       placeholder: {
         type: String,
-        default: '填写乘客证件号码'
+        default: '填写证件号码'
+      },
+      type: {
+        type: Number,
+        default: 1 // 1 身份证 2 银行卡
       }
     },
     data () {
@@ -28,7 +38,11 @@
         // 数据长度是否增加
         isAdd: false,
         // 是否是编辑了数据
-        isEdited: false
+        isEdited: false,
+        // 银行卡位数
+        bankNumberLen: '23',
+        // 身份证位数
+        cardNumberLen: '21'
       }
     },
     watch: {
@@ -38,7 +52,7 @@
       inputText (value, oldValue) {
         this.inputText = this.dataFormart(value)
         let valNoSpace = value.replace(/ /g, '')
-        let oldValueNoSpace = oldValue.replace(/ /g, '')
+        let oldValueNoSpace = oldValue ? oldValue.replace(/ /g, '') : 0
         if (valNoSpace.length > oldValueNoSpace.length) {
           // 数据增加，并且认为没有格式化数据
           this.isFormatted = false
@@ -70,17 +84,50 @@
     },
     methods: {
       updateText (inputText) {
-        if (!inputText) {
+        // 若值存在 或者没有变化 禁止更新
+        if (!inputText || inputText === this.inputText) {
           return;
         }
-        let frontSex = inputText.substring(0, 6) + ' '
-        let rear = inputText.substring(6).replace(/\s/g, '').replace(/[^\w]/g, '').replace(/(\d{4})(?=\w)/g, '$1 ')
-        this.inputText = frontSex + rear
+        if (this.type === 1) {
+          let frontSex = inputText.substring(0, 6) + ' '
+          let rear = inputText.substring(6).replace(/\s/g, '').replace(/[^\w]/g, '').replace(/(\d{4})(?=\w)/g, '$1 ')
+          this.inputText = frontSex + rear
+          console.log(this.inputText)
+        } else {
+          this.inputText = inputText.replace(/(\d{4})/g, '$1 ').trim()
+        }
+      },
+      // 返回银行卡号
+      bankValue (newValue) {
+        if (newValue.length <= 4) {
+          return newValue
+        } else if (newValue.length > 4 && newValue.length <= 8) {
+          let str1 = newValue.substr(0, 4)
+          let str2 = newValue.substr(4)
+          return str1 + ' ' + str2
+        } else if (newValue.length > 8 && newValue.length <= 12) {
+          let str1 = newValue.substr(0, 4)
+          let str2 = newValue.substr(4, 4)
+          let str3 = newValue.substr(8)
+          return str1 + ' ' + str2 + ' ' + str3
+        } else if (newValue.length > 12 && newValue.length <= 16) {
+          let str1 = newValue.substr(0, 4)
+          let str2 = newValue.substr(4, 4)
+          let str3 = newValue.substr(8, 4)
+          let str4 = newValue.substr(12)
+          return str1 + ' ' + str2 + ' ' + str3 + ' ' + str4
+        } else if (newValue.length > 16 && newValue.length <= 20) {
+          let str1 = newValue.substr(0, 4)
+          let str2 = newValue.substr(4, 4)
+          let str3 = newValue.substr(8, 4)
+          let str4 = newValue.substr(12, 4)
+          let str5 = newValue.substr(16)
+          return str1 + ' ' + str2 + ' ' + str3 + ' ' + str4 + ' ' + str5
+        }
       },
 
-      // 更正
-      dataFormart (value) {
-        let newValue = value.replace(/ /g, '')
+      // 返回身份证号
+      cardValue (newValue) {
         if (newValue.length <= 6) {
           return newValue
         } else if (newValue.length > 6 && newValue.length <= 10) {
@@ -99,9 +146,16 @@
           let str4 = newValue.substr(14)
           return str1 + ' ' + str2 + ' ' + str3 + ' ' + str4
         }
-        return value
       },
-
+      // 更正
+      dataFormart (value) {
+        let newValue = value.replace(/ /g, '')
+        if (this.type === 1) {
+          return this.cardValue(newValue).replace(/[^a-zA-Z\s\d]/g, '')
+        } else {
+          return this.bankValue(newValue).replace(/[^\s\d]/g, '')
+        }
+      },
       // 光标位置
       getCaretPosition (element) {
         let cursorPos = 0;
@@ -114,7 +168,6 @@
         }
         return cursorPos;
       },
-
       // 设定光标位置
       setCaretPosition (textDom, pos) {
         if (textDom.setSelectionRange) {
@@ -152,13 +205,21 @@
     },
     updated () {
       // 如果格式化了数据就重新设定光标位置
-      if (this.isFormatted) {
-        this.setCaretPosition(this.$refs.input, this.caretPos)
-      }
+      this.$nextTick(() => {
+        if (this.isFormatted) {
+          this.setCaretPosition(this.$refs.input, this.caretPos)
+        }
+      })
     }
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  .card-number{
+    width: 100%;
+    input{
+      width: 100%;
+      color: black;
+    }
+  }
 </style>
