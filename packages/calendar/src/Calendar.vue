@@ -347,7 +347,6 @@
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    padding: 0 10px;
     width: 100%;
 
     &-item {
@@ -365,7 +364,6 @@
       justify-content: flex-start;
       height: 40px;
       line-height: 40px;
-      margin: 0 10px;
       font-weight: 400;
       border-bottom: 1px solid rgba(238, 239, 240, 1);
 
@@ -385,7 +383,7 @@
     margin: 8px auto;
     border-radius: 50%;
     line-height: 30px;
-    background: rgba(255, 168, 9, 1);
+    background: #4981EE;
     box-shadow: 0 2px 4px 0 rgba(255,168,9,0.3);
     color: rgba(255, 255, 255, 1);
 
@@ -471,7 +469,7 @@
 
         span {
           font-weight: 400;
-          color: rgba(255,168,9,1);
+          color: #4981EE;
         }
 
         em {
