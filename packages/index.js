@@ -1,11 +1,13 @@
-import CardInput from "./card-input/src/CardInput";
-import Calendar from "./calendar/src/Calendar";
-import PriceCalendar from './priceCalendar/src/PriceCalendar'
+import CardInput from "./card-input";
+import Calendar from "./calendar";
+import PriceCalendar from './priceCalendar'
+import SoftKeyboard from './soft-keyboard'
 // 以数组的结构保存组件
 const components = [
   CardInput,
   Calendar,
-  PriceCalendar
+  PriceCalendar,
+  SoftKeyboard
 ]
 
 // 定义install方法
