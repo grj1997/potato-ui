@@ -1,7 +1,7 @@
 {
   "name": "potato-ui",
   "author": "652139627@qq.com",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": false,
   "main": "lib/potato-ui.umd.min.js",
   "license": "MIT",
