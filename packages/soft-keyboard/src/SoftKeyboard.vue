@@ -22,14 +22,13 @@
       <p class="close-keyboard"><a @click="closeKeyboard">完成</a></p>
       <div class="keyboard-vessel">
         <template v-if="showChinese">
-          <div class="key-item" v-for="(chinese, index) in region" :key="chinese" @click="activeChinese(chinese)"
-               :class="{'key-item-end': ((index + 1) % 10 === 0)}">
+          <div class="key-item" v-for="(chinese) in region" :key="chinese" @click="activeChinese(chinese)">
             <span>{{chinese}}</span>
           </div>
         </template>
         <template v-if="showCombination">
-          <div class="key-item" v-for="(val, index) in combination" :key="val.text" @click="activeCombination(val)"
-               :class="{'key-item-end': ((index + 1) % 10 === 0), 'no-click': !val.clickStatus}">
+          <div class="key-item" v-for="(val) in combination" :key="val.text" @click="activeCombination(val)"
+               :class="{'no-click': !val.clickStatus}">
             <span>{{val.text}}</span>
           </div>
         </template>
@@ -417,6 +416,7 @@
   .ipt-list {
     display: flex;
     align-items: center;
+    justify-content: center;
     .ml-12 {
       margin-left: 12px;
     }
@@ -427,7 +427,7 @@
       font-family: PingFangSC-Regular;
       font-weight: 400;
       line-height: normal;
-      width: 32px;
+      width: 8.815%;
       height: 36px;
       border: 1px solid rgba(239, 239, 240, 1);
       text-align: center;
@@ -489,9 +489,9 @@
         flex-wrap: wrap;
         justify-content: center;
         .key-item {
-          margin-right: 4px;
+          margin: 0 2px 10px;
           box-sizing: border-box;
-          width: 32px;
+          width: 8.8215%;
           height: 42px;
           background: rgba(255, 255, 255, 1);
           box-shadow: 0 1px 2px 0 rgba(197, 198, 198, 0.42);
@@ -500,7 +500,6 @@
           overflow: hidden;
           position: relative;
           transition: background-color .1s linear, border .1s linear;
-          margin-bottom: 10px;
           &:after {
             content: "";
             display: block;
@@ -549,7 +548,7 @@
           }
         }
         .del-bt {
-          width: 32px;
+          width: 8.8215%;
           height: 42px;
           background: rgba(167, 174, 188, 1);
           box-shadow: 0 1px 2px 0 rgba(197, 198, 198, 0.42);
@@ -558,13 +557,11 @@
           display: flex;
           align-items: center;
           justify-content: center;
+          margin-left: 2px;
           img {
             width: 24px;
             height: 18px;
           }
-        }
-        .key-item-end {
-          margin-right: 0;
         }
         &:nth-last-of-type(1) {
           margin-bottom: 0;
