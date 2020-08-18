@@ -3,8 +3,8 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
-import PardInput from "../packages/index";
-Vue.use(PardInput)
+import potatoUl from "../packages/index";
+Vue.use(potatoUl)
 
 new Vue({
   render: h => h(App),
