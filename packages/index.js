@@ -2,6 +2,7 @@ import CardInput from "./card-input";
 import Calendar from "./calendar";
 import PriceCalendar from './priceCalendar'
 import SoftKeyboard from './soft-keyboard'
+import config from '../package.json'
 // 以数组的结构保存组件
 const components = [
   CardInput,
@@ -24,8 +25,7 @@ if(typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)
 }
 export default {
-  // 导出的对象必须具备一个install方法
   install,
-  // 组件列表
+  version: config.version,
   ...components
 }

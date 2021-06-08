@@ -92,7 +92,6 @@
           let frontSex = inputText.substring(0, 6) + ' '
           let rear = inputText.substring(6).replace(/\s/g, '').replace(/[^\w]/g, '').replace(/(\d{4})(?=\w)/g, '$1 ')
           this.inputText = frontSex + rear
-          console.log(this.inputText)
         } else {
           this.inputText = inputText.replace(/(\d{4})/g, '$1 ').trim()
         }

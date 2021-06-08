@@ -1,9 +1,9 @@
 {
   "name": "potato-ui",
   "author": "652139627@qq.com",
-  "version": "0.1.8",
+  "version": "0.2.2",
   "private": false,
-  "main": "lib/potato-ui.umd.min.js",
+  "main": "lib/index/index.js",
   "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
