@@ -1,29 +1,38 @@
-const {resolve, getComponentEntries} = require('./build/utils')
+const {getComponentEntries, outputDirFn, pages} = require('./build/utils')
 module.exports = {
   css: { extract: false }, // 强制内联（引用插件的时候就不用再引用css文件了，去掉可以看看效果）
-  pages: {
-    index: {
-      // page 的入口
-      entry: 'src/main.js',
-      // 模板来源
-      template: 'public/index.html',
-      // 输出文件名
-      filename: 'index.html'
-    }
-  },
-  outputDir: 'lib',
+  pages: pages(),
+  publicPath: './',
+  outputDir: outputDirFn(),
   productionSourceMap: false,
-  configureWebpack:{
-    entry: {
-      ...getComponentEntries('packages'),
-    },
-    output: {
-      filename: '[name]/index.js',
-      libraryTarget: 'commonjs2',
-      libraryExport: 'default'
+  configureWebpack: config => {
+    if (process.env.npm_lifecycle_script.indexOf('lib') !== -1) {
+      config.entry = {...getComponentEntries('packages')}
+      console.log('打包文件', config.entry)
     }
+    config.output.filename = '[name]/index.js'
   },
   chainWebpack: config => {
+    config.module
+      .rule('md')
+      .test(/\.md/)
+      .use('vue-loader')
+      .loader('vue-loader')
+      .end()
+      .use('vue-markdown-loader')
+      .loader('vue-markdown-loader/lib/markdown-compiler')
+      .options({
+        wrapper: 'article',
+        wrapperName: '123',
+        raw: true,
+        preventExtract: true,
+        use: [
+          [require('markdown-it-container'), 'tip'],
+          [require('markdown-it-container'), 'warning'],
+          [require('markdown-it-container'), 'danger'],
+          [require('markdown-it-container'), 'details'],
+        ],
+      })
     config.optimization.delete('splitChunks')
     config.plugins.delete('copy')
     config.plugins.delete('html')

@@ -19,5 +19,42 @@ module.exports = {
       return ret
     }, {})
     return componentEntries
+  },
+  outputDirFn() {
+    return process.env.npm_lifecycle_script.indexOf('lib') !== -1 ? 'lib' : 'dist'
+  },
+  pages () {
+    if (process.env.npm_lifecycle_script.indexOf('lib') !== -1) {
+      console.log('lib打包')
+      return {
+        index: {
+          // page 的入口
+          entry: 'src/main.js',
+          // 模板来源
+          template: 'public/home.html',
+          // 输出文件名
+          filename: 'index.html'
+        },
+      }
+    } else {
+      return {
+        home: {
+          // page 的入口
+          entry: 'src/main.js',
+          // 模板来源
+          template: 'public/home.html',
+          // 输出文件名
+          filename: 'home.html'
+        },
+        mobile: {
+          // page 的入口
+          entry: 'src/views/mobile/main.js',
+          // 模板来源
+          template: 'public/mobile.html',
+          // 输出文件名
+          filename: 'mobile.html'
+        }
+      }
+    }
   }
 }
