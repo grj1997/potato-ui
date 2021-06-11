@@ -3,6 +3,8 @@ node_modules/
 packages/
 src/
 public/
+build/
+dist/
 vue.config.js
 babel.config.js
 *.map

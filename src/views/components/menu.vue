@@ -17,7 +17,7 @@
         <router-view/>
       </div>
       <div class="simulator">
-        <iframe @load="loadIframe" id="iframe" src="/mobile.html#/"/>
+        <iframe @load="loadIframe" id="iframe" :src="iframeSrc"/>
       </div>
     </section>
   </div>
@@ -37,7 +37,8 @@
         haveScroll: false,
         timer: '',
         liberty: 0,
-        dMobile: ''
+        dMobile: '',
+        iframeSrc: ''
       }
     },
     watch:{
@@ -73,6 +74,7 @@
           this.liberty = -60
         })()
       }
+      this.iframeSrc = '/mobile.html#' + this.$route.path
       if (window.history && window.history.pushState) {
         history.pushState(null, null, document.URL);
         window.addEventListener('popstate', this.goBack, false);
@@ -84,9 +86,6 @@
       },
       loadIframe () {
         this.dMobile = document.getElementById('iframe').contentWindow.dMobile
-        vm.dMobile.$router.replace({
-          name: this.active
-        })
       },
       goTo (item) {
         console.log(item.name)
@@ -216,7 +215,7 @@
         height: 667px;
         z-index: 1;
         margin-right: 20px;
-        background: #fafafa;
+        background: white;
         border-radius: 12px;
         box-shadow: #ebedf0 0 4px 12px;
         iframe{

@@ -21,7 +21,11 @@ module.exports = {
     return componentEntries
   },
   outputDirFn() {
-    return process.env.npm_lifecycle_script.indexOf('lib') !== -1 ? 'lib' : 'dist'
+    if (process.env.npm_lifecycle_script.indexOf('lib') !== -1) {
+      return resolve('lib')
+    } else {
+      return resolve('dist')
+    }
   },
   pages () {
     if (process.env.npm_lifecycle_script.indexOf('lib') !== -1) {
