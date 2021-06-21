@@ -1,6 +1,6 @@
 <template>
   <div class="menu" @scroll="scroll">
-    <header style="color: red;"></header>
+    <header><span>土豆ui</span></header>
     <section style="height: 100%;">
       <div class="nav" ref="nav" :class="navClass" :style="{height: (clientHeight - 100 + liberty) + 'px'}">
         <div class="nav-menu" v-for="(item) in menu" :key="item.name">
@@ -137,6 +137,12 @@
       width: 100%;
       user-select: none;
       background: #001938;
+      span{
+        margin: 0 16px;
+        display: inline-block;
+        padding-top: 16px;
+        color: white;
+      }
     }
     section{
       position: relative;
